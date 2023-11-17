@@ -7,17 +7,20 @@ for await (const conn of server) {
     for await (const requestEvent of httpConn) {
       // ... handle requestEvent ...
 			if (requestEvent.request.method == "POST") {
-  			console.log(requestEvent);
-  			//const requestBody = await requestEvent.request.formData();
+
   			const requestBody = await requestEvent.request.text();
-				console.log(requestBody);
 				const params = new URLSearchParams(requestBody);
-				console.log(params);
-				console.log(params.get('fullname'))
-			  requestEvent.respondWith(new Response("Dings\n"));
-			} else {
-				requestEvent.respondWith(new Response("nein\n"))
-			}
+        const message = params.get('message');
+				const fullname = params.get('fullname');
+        const sender = params.get('contact-email');
+				console.log('requestEvent.params:\n', params);
+
+        // send message to client
+        sendMail(message, fullname, sender)
+
+        // TODO: redirect
+        requestEvent.respondWith(Response.redirect('https://www.wikipedia.de/'));
+      }
     }
   })();
 }
