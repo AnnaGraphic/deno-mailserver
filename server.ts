@@ -1,3 +1,4 @@
+import { sendMail } from "./client.ts";
 const server = Deno.listen({ port: 8080});
 
 for await (const conn of server) {
